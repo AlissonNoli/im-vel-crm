@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CRMLayout from "@/components/CRMLayout";
 import Dashboard from "@/pages/Dashboard";
-import Leads from "@/pages/Leads";
+import Prospectos from "@/pages/Prospectos";
+import ProspectoDetalhe from "@/pages/ProspectoDetalhe";
 import Imoveis from "@/pages/Imoveis";
 import Proprietarios from "@/pages/Proprietarios";
 import Compradores from "@/pages/Compradores";
@@ -27,7 +28,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route element={<CRMLayout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/leads" element={<Leads />} />
+            <Route path="/prospectos" element={<Prospectos />} />
+            <Route path="/prospectos/:id" element={<ProspectoDetalhe />} />
             <Route path="/imoveis" element={<Imoveis />} />
             <Route path="/proprietarios" element={<Proprietarios />} />
             <Route path="/compradores" element={<Compradores />} />

@@ -19,7 +19,7 @@ export function QuickAddButton() {
         <DropdownMenuContent align="end" side="top" className="mb-2">
           <DropdownMenuItem>
             <Users className="mr-2 h-4 w-4" />
-            Novo Lead
+            Novo Prospeto
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Building2 className="mr-2 h-4 w-4" />
