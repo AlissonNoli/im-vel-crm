@@ -24,7 +24,7 @@ import {
 
 const menuItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Leads / Funil", url: "/leads", icon: Users },
+  { title: "Prospectos", url: "/prospectos", icon: Users },
   { title: "Imóveis", url: "/imoveis", icon: Building2 },
   { title: "Proprietários", url: "/proprietarios", icon: UserCheck },
   { title: "Compradores", url: "/compradores", icon: UserPlus },

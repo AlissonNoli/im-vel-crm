@@ -28,7 +28,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route element={<CRMLayout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/leads" element={<Leads />} />
+            <Route path="/prospectos" element={<Prospectos />} />
+            <Route path="/prospectos/:id" element={<ProspectoDetalhe />} />
             <Route path="/imoveis" element={<Imoveis />} />
             <Route path="/proprietarios" element={<Proprietarios />} />
             <Route path="/compradores" element={<Compradores />} />

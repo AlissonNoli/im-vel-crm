@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { mockLeads, mockInteracoes, mockImoveis, chartData, stageLabels, type LeadStage } from "@/data/mockData";
 
 const summaryCards = [
-  { title: "Leads Ativos", value: mockLeads.filter(l => !["fechado", "perdido"].includes(l.etapa)).length, icon: Users, change: "+12%" },
+  { title: "Prospectos Ativos", value: mockLeads.filter(l => !["fechado", "perdido"].includes(l.etapa)).length, icon: Users, change: "+12%" },
   { title: "Valor Total Pipeline", value: `€${(mockLeads.reduce((a, l) => a + l.valor, 0) / 1000).toFixed(0)}k`, icon: Euro, change: "+8%" },
   { title: "Imóveis à Venda", value: mockImoveis.filter(i => i.status === "disponivel").length, icon: Building2, change: "3 novos" },
   { title: "Visitas Agendadas", value: mockLeads.filter(l => l.etapa === "visita").length, icon: CalendarDays, change: "Esta semana" },

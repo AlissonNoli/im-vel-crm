@@ -1,18 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Phone, Mail, GripVertical, Search, Filter } from "lucide-react";
+import { Phone, Mail, GripVertical, Search } from "lucide-react";
 import { mockLeads, stageLabels, stageColors, type Lead, type LeadStage } from "@/data/mockData";
 
 const stages: LeadStage[] = ["novo", "contacto", "visita", "negociacao", "fechado", "perdido"];
 
-function LeadCard({ lead }: { lead: Lead }) {
+function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   return (
-    <Card className="mb-2 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow">
+    <Card className="mb-2 cursor-pointer hover:shadow-md transition-shadow" onClick={onClick}>
       <CardContent className="p-3">
         <div className="flex items-start justify-between mb-1">
           <p className="font-medium text-sm">{lead.nome}</p>
@@ -40,6 +41,7 @@ function LeadCard({ lead }: { lead: Lead }) {
 }
 
 function KanbanView() {
+  const navigate = useNavigate();
   return (
     <div className="flex gap-4 overflow-x-auto pb-4">
       {stages.map((stage) => {
@@ -53,7 +55,7 @@ function KanbanView() {
             </div>
             <div className="space-y-0 bg-secondary/50 rounded-lg p-2 min-h-[400px]">
               {leads.map((lead) => (
-                <LeadCard key={lead.id} lead={lead} />
+                <LeadCard key={lead.id} lead={lead} onClick={() => navigate(`/prospectos/${lead.id}`)} />
               ))}
             </div>
           </div>
@@ -64,6 +66,7 @@ function KanbanView() {
 }
 
 function ListView() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const filtered = mockLeads.filter((l) =>
     l.nome.toLowerCase().includes(search.toLowerCase()) ||
@@ -95,7 +98,7 @@ function ListView() {
       </div>
       <div className="space-y-2">
         {filtered.map((lead) => (
-          <Card key={lead.id} className="hover:shadow-sm transition-shadow">
+          <Card key={lead.id} className="hover:shadow-sm transition-shadow cursor-pointer" onClick={() => navigate(`/prospectos/${lead.id}`)}>
             <CardContent className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`w-2 h-10 rounded-full ${stageColors[lead.etapa]}`} />
@@ -116,15 +119,15 @@ function ListView() {
   );
 }
 
-export default function Leads() {
+export default function Prospectos() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Leads / Funil</h1>
+          <h1 className="text-2xl font-bold">Prospectos</h1>
           <p className="text-muted-foreground">Gestão do pipeline de vendas</p>
         </div>
-        <Button>+ Novo Lead</Button>
+        <Button>+ Novo Prospeto</Button>
       </div>
 
       <Tabs defaultValue="kanban">
