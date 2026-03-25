@@ -20,8 +20,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { User, Shield, Users, UserCog } from "lucide-react";
+import { User, Shield, Users, UserCog, ArrowLeft, KeyRound } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 type Role = "Admin" | "Agent" | "Assistant_Co" | "Coordinator" | "Manager";
 
@@ -29,6 +30,12 @@ interface Utilizador {
   nome: string;
   email: string;
   role: Role;
+  telefone?: string;
+  endereco?: string;
+  cidade?: string;
+  codigoPostal?: string;
+  cargo?: string;
+  observacoes?: string;
 }
 
 const allPermissions = [
@@ -51,12 +58,12 @@ const defaultPermissionsByRole: Record<Role, string[]> = {
 };
 
 const utilizadores: Utilizador[] = [
-  { nome: "Alisson Noli", email: "despi.661@gmail.com", role: "Admin" },
-  { nome: "Administrador", email: "administrador@administrador.com", role: "Admin" },
-  { nome: "Agente", email: "agente@agente.com", role: "Agent" },
-  { nome: "Assistente Co", email: "assistenteco@assistenteco.com", role: "Assistant_Co" },
-  { nome: "Coordenador", email: "coordenador@coordenador.com", role: "Coordinator" },
-  { nome: "Gestor", email: "gestor@gestor.com", role: "Manager" },
+  { nome: "Alisson Noli", email: "despi.661@gmail.com", role: "Admin", telefone: "+351 912 345 678", endereco: "Rua das Flores, 123", cidade: "Lisboa", codigoPostal: "1000-001", cargo: "Diretor" },
+  { nome: "Administrador", email: "administrador@administrador.com", role: "Admin", telefone: "+351 913 000 000", endereco: "Av. da Liberdade, 50", cidade: "Lisboa", codigoPostal: "1250-001", cargo: "Administrador" },
+  { nome: "Agente", email: "agente@agente.com", role: "Agent", telefone: "+351 914 000 000", endereco: "Rua Augusta, 10", cidade: "Porto", codigoPostal: "4000-001", cargo: "Consultor Imobiliário" },
+  { nome: "Assistente Co", email: "assistenteco@assistenteco.com", role: "Assistant_Co", telefone: "+351 915 000 000", endereco: "Rua do Carmo, 5", cidade: "Coimbra", codigoPostal: "3000-001", cargo: "Assistente Comercial" },
+  { nome: "Coordenador", email: "coordenador@coordenador.com", role: "Coordinator", telefone: "+351 916 000 000", endereco: "Praça da República, 8", cidade: "Braga", codigoPostal: "4700-001", cargo: "Coordenador de Equipa" },
+  { nome: "Gestor", email: "gestor@gestor.com", role: "Manager", telefone: "+351 917 000 000", endereco: "Rua do Comércio, 22", cidade: "Faro", codigoPostal: "8000-001", cargo: "Gestor Comercial" },
 ];
 
 const roleLabels: Record<Role, string> = {
@@ -123,7 +130,73 @@ function EditPermissionsDialog({ user }: { user: Utilizador }) {
   );
 }
 
+function PerfilUtilizadorView({ user, onBack }: { user: Utilizador; onBack: () => void }) {
+  const [showResetPassword, setShowResetPassword] = useState(false);
+
+  return (
+    <div className="space-y-4">
+      <Button variant="ghost" size="sm" onClick={onBack} className="mb-2">
+        <ArrowLeft className="mr-1 h-4 w-4" /> Voltar à lista
+      </Button>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Perfil de {user.nome}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><Label>Nome</Label><Input defaultValue={user.nome} /></div>
+            <div><Label>E-mail</Label><Input defaultValue={user.email} /></div>
+            <div><Label>Telefone</Label><Input defaultValue={user.telefone || ""} /></div>
+            <div><Label>Cargo</Label><Input defaultValue={user.cargo || ""} /></div>
+            <div><Label>Endereço</Label><Input defaultValue={user.endereco || ""} /></div>
+            <div><Label>Cidade</Label><Input defaultValue={user.cidade || ""} /></div>
+            <div><Label>Código Postal</Label><Input defaultValue={user.codigoPostal || ""} /></div>
+            <div>
+              <Label>Perfil / Função</Label>
+              <Input defaultValue={roleLabels[user.role]} readOnly className="bg-muted" />
+            </div>
+          </div>
+          <div>
+            <Label>Observações</Label>
+            <Textarea defaultValue={user.observacoes || ""} placeholder="Notas internas sobre este utilizador..." />
+          </div>
+          <Separator />
+          <div className="flex items-center justify-between">
+            <Button variant="outline" onClick={() => setShowResetPassword(!showResetPassword)}>
+              <KeyRound className="mr-1 h-4 w-4" /> Redefinir Senha
+            </Button>
+            <Button>Guardar Alterações</Button>
+          </div>
+
+          {showResetPassword && (
+            <Card className="border-destructive/30 bg-destructive/5">
+              <CardContent className="pt-4 space-y-3">
+                <h4 className="font-medium">Redefinir Senha</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div><Label>Nova Senha</Label><Input type="password" placeholder="••••••••" /></div>
+                  <div><Label>Confirmar Senha</Label><Input type="password" placeholder="••••••••" /></div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => setShowResetPassword(false)}>Cancelar</Button>
+                  <Button variant="destructive" size="sm">Confirmar Redefinição</Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 function UtilizadoresTab() {
+  const [selectedUser, setSelectedUser] = useState<Utilizador | null>(null);
+
+  if (selectedUser) {
+    return <PerfilUtilizadorView user={selectedUser} onBack={() => setSelectedUser(null)} />;
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -142,12 +215,9 @@ function UtilizadoresTab() {
                 <Badge variant={u.role === "Admin" ? "default" : "secondary"}>
                   {roleLabels[u.role]}
                 </Badge>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="link" size="sm" className="text-primary">Editar permissões</Button>
-                  </DialogTrigger>
-                  <EditPermissionsDialog user={u} />
-                </Dialog>
+                <Button variant="link" size="sm" className="text-primary" onClick={() => setSelectedUser(u)}>
+                  Editar perfil
+                </Button>
               </div>
             </div>
           ))}
