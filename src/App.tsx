@@ -13,6 +13,10 @@ import Compradores from "@/pages/Compradores";
 import Agendamentos from "@/pages/Agendamentos";
 import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
+import PerfilPage from "@/pages/configuracoes/PerfilPage";
+import UtilizadoresPage from "@/pages/configuracoes/UtilizadoresPage";
+import PermissoesGrupoPage from "@/pages/configuracoes/PermissoesGrupoPage";
+import PermissoesUtilizadorPage from "@/pages/configuracoes/PermissoesUtilizadorPage";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 
@@ -36,6 +40,10 @@ const App = () => (
             <Route path="/agendamentos" element={<Agendamentos />} />
             <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/configuracoes" element={<Configuracoes />} />
+            <Route path="/configuracoes/perfil" element={<PerfilPage />} />
+            <Route path="/configuracoes/utilizadores" element={<UtilizadoresPage />} />
+            <Route path="/configuracoes/permissoes-grupo" element={<PermissoesGrupoPage />} />
+            <Route path="/configuracoes/permissoes-utilizador" element={<PermissoesUtilizadorPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
