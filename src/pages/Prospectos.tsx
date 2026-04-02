@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Phone, Mail, GripVertical, Search } from "lucide-react";
-import { mockLeads, stageLabels, stageColors, type Lead, type LeadStage } from "@/data/mockData";
+import { Phone, Mail, GripVertical } from "lucide-react";
+import { FilterBar } from "@/components/FilterBar";
+import { PaginationBar } from "@/components/PaginationBar";
+import { LoadingState, EmptyState, ErrorState } from "@/components/StateViews";
+import { usePaginated } from "@/hooks/usePaginated";
+import { leadsApi } from "@/api/leads";
+import { USE_MOCKS, mockLeads, mockPaginated, stageLabels, stageColors } from "@/data/mocks";
+import type { Lead, LeadStatus, PaginatedResponse, QueryParams } from "@/types/api";
 
-const stages: LeadStage[] = ["novo", "contacto", "visita", "negociacao", "fechado", "perdido"];
+const stages: LeadStatus[] = ["novo", "contacto", "visita", "negociacao", "fechado", "perdido"];
+
+const statusFilters = stages.map((s) => ({ label: stageLabels[s], value: s }));
 
 function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   return (
@@ -40,86 +46,32 @@ function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   );
 }
 
-function KanbanView() {
-  const navigate = useNavigate();
-  return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
-      {stages.map((stage) => {
-        const leads = mockLeads.filter((l) => l.etapa === stage);
-        return (
-          <div key={stage} className="min-w-[260px] flex-shrink-0">
-            <div className="flex items-center gap-2 mb-3">
-              <div className={`w-3 h-3 rounded-full ${stageColors[stage]}`} />
-              <h3 className="text-sm font-semibold">{stageLabels[stage]}</h3>
-              <Badge variant="secondary" className="text-xs">{leads.length}</Badge>
-            </div>
-            <div className="space-y-0 bg-secondary/50 rounded-lg p-2 min-h-[400px]">
-              {leads.map((lead) => (
-                <LeadCard key={lead.id} lead={lead} onClick={() => navigate(`/prospectos/${lead.id}`)} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function ListView() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const filtered = mockLeads.filter((l) =>
-    l.nome.toLowerCase().includes(search.toLowerCase()) ||
-    l.imovel.toLowerCase().includes(search.toLowerCase())
-  );
-
-  return (
-    <div className="space-y-4">
-      <div className="flex gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Pesquisar por nome ou imóvel..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Etapa" />
-          </SelectTrigger>
-          <SelectContent>
-            {stages.map((s) => (
-              <SelectItem key={s} value={s}>{stageLabels[s]}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        {filtered.map((lead) => (
-          <Card key={lead.id} className="hover:shadow-sm transition-shadow cursor-pointer" onClick={() => navigate(`/prospectos/${lead.id}`)}>
-            <CardContent className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className={`w-2 h-10 rounded-full ${stageColors[lead.etapa]}`} />
-                <div>
-                  <p className="font-medium">{lead.nome}</p>
-                  <p className="text-sm text-muted-foreground">{lead.imovel} · {lead.agente}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="font-semibold text-primary">€{lead.valor.toLocaleString("pt-PT")}</span>
-                <Badge variant="secondary">{stageLabels[lead.etapa]}</Badge>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
+const fetcher = (params: QueryParams): Promise<PaginatedResponse<Lead>> => {
+  if (USE_MOCKS) {
+    return Promise.resolve(mockPaginated(mockLeads, params));
+  }
+  return leadsApi.list(params);
+};
 
 export default function Prospectos() {
+  const navigate = useNavigate();
+  const { data: leads, count, page, setPage, totalPages, loading, error, params, updateParams, refetch } = usePaginated<Lead>({
+    fetcher,
+    initialParams: { ordering: "-created_at" },
+  });
+
+  const [search, setSearch] = useState("");
+
+  const handleSearch = useCallback((value: string) => {
+    setSearch(value);
+    updateParams({ search: value });
+  }, [updateParams]);
+
+  if (loading) return <LoadingState />;
+  if (error) return <ErrorState message={error} onRetry={refetch} />;
+
+  const kanbanLeads = USE_MOCKS ? mockLeads : leads;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -127,7 +79,7 @@ export default function Prospectos() {
           <h1 className="text-2xl font-bold">Prospectos</h1>
           <p className="text-muted-foreground">Gestão do pipeline de vendas</p>
         </div>
-        <Button>+ Novo Prospeto</Button>
+        <Button onClick={() => navigate("/leads/new")}>+ Novo Prospeto</Button>
       </div>
 
       <Tabs defaultValue="kanban">
@@ -135,11 +87,64 @@ export default function Prospectos() {
           <TabsTrigger value="kanban">Kanban</TabsTrigger>
           <TabsTrigger value="lista">Lista</TabsTrigger>
         </TabsList>
+
         <TabsContent value="kanban" className="mt-4">
-          <KanbanView />
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {stages.map((stage) => {
+              const stageLeads = kanbanLeads.filter((l) => l.status === stage);
+              return (
+                <div key={stage} className="min-w-[260px] flex-shrink-0">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`w-3 h-3 rounded-full ${stageColors[stage]}`} />
+                    <h3 className="text-sm font-semibold">{stageLabels[stage]}</h3>
+                    <Badge variant="secondary" className="text-xs">{stageLeads.length}</Badge>
+                  </div>
+                  <div className="space-y-0 bg-secondary/50 rounded-lg p-2 min-h-[400px]">
+                    {stageLeads.map((lead) => (
+                      <LeadCard key={lead.id} lead={lead} onClick={() => navigate(`/prospectos/${lead.id}`)} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </TabsContent>
-        <TabsContent value="lista" className="mt-4">
-          <ListView />
+
+        <TabsContent value="lista" className="mt-4 space-y-4">
+          <FilterBar
+            searchPlaceholder="Pesquisar por nome ou imóvel..."
+            searchValue={search}
+            onSearchChange={handleSearch}
+            filters={[{ key: "status", label: "Etapa", options: statusFilters }]}
+            filterValues={{ status: (params.status as string) ?? "" }}
+            onFilterChange={(key, value) => updateParams({ [key]: value })}
+          />
+
+          {leads.length === 0 ? (
+            <EmptyState message="Nenhum prospeto encontrado." />
+          ) : (
+            <div className="space-y-2">
+              {leads.map((lead) => (
+                <Card key={lead.id} className="hover:shadow-sm transition-shadow cursor-pointer" onClick={() => navigate(`/prospectos/${lead.id}`)}>
+                  <CardContent className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-2 h-10 rounded-full ${stageColors[lead.status]}`} />
+                      <div>
+                        <p className="font-medium">{lead.nome}</p>
+                        <p className="text-sm text-muted-foreground">{lead.imovel} · {lead.agente}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold text-primary">€{lead.valor.toLocaleString("pt-PT")}</span>
+                      <Badge variant="secondary">{stageLabels[lead.status]}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          <PaginationBar page={page} totalPages={totalPages} count={count} onPageChange={setPage} />
         </TabsContent>
       </Tabs>
     </div>

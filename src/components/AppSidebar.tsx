@@ -36,8 +36,7 @@ const menuItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Prospectos", url: "/prospectos", icon: Users },
   { title: "Imóveis", url: "/imoveis", icon: Building2 },
-  { title: "Proprietários", url: "/proprietarios", icon: UserCheck },
-  { title: "Compradores", url: "/compradores", icon: UserPlus },
+  { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Agendamentos", url: "/agendamentos", icon: CalendarDays },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];

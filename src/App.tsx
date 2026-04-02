@@ -3,13 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/auth/AuthContext";
 import CRMLayout from "@/components/CRMLayout";
 import Dashboard from "@/pages/Dashboard";
 import Prospectos from "@/pages/Prospectos";
 import ProspectoDetalhe from "@/pages/ProspectoDetalhe";
+import LeadNovo from "@/pages/LeadNovo";
 import Imoveis from "@/pages/Imoveis";
-import Proprietarios from "@/pages/Proprietarios";
-import Compradores from "@/pages/Compradores";
+import Clientes from "@/pages/Clientes";
 import Agendamentos from "@/pages/Agendamentos";
 import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
@@ -27,27 +28,31 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<CRMLayout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/prospectos" element={<Prospectos />} />
-            <Route path="/prospectos/:id" element={<ProspectoDetalhe />} />
-            <Route path="/imoveis" element={<Imoveis />} />
-            <Route path="/proprietarios" element={<Proprietarios />} />
-            <Route path="/compradores" element={<Compradores />} />
-            <Route path="/agendamentos" element={<Agendamentos />} />
-            <Route path="/relatorios" element={<Relatorios />} />
-            <Route path="/configuracoes" element={<Configuracoes />} />
-            <Route path="/configuracoes/perfil" element={<PerfilPage />} />
-            <Route path="/configuracoes/utilizadores" element={<UtilizadoresPage />} />
-            <Route path="/configuracoes/permissoes-grupo" element={<PermissoesGrupoPage />} />
-            <Route path="/configuracoes/permissoes-utilizador" element={<PermissoesUtilizadorPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<CRMLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/prospectos" element={<Prospectos />} />
+              <Route path="/prospectos/:id" element={<ProspectoDetalhe />} />
+              <Route path="/leads/new" element={<LeadNovo />} />
+              <Route path="/imoveis" element={<Imoveis />} />
+              <Route path="/clientes" element={<Clientes />} />
+              <Route path="/proprietarios" element={<Clientes />} />
+              <Route path="/compradores" element={<Clientes />} />
+              <Route path="/agendamentos" element={<Agendamentos />} />
+              <Route path="/relatorios" element={<Relatorios />} />
+              <Route path="/configuracoes" element={<Configuracoes />} />
+              <Route path="/configuracoes/perfil" element={<PerfilPage />} />
+              <Route path="/configuracoes/utilizadores" element={<UtilizadoresPage />} />
+              <Route path="/configuracoes/permissoes-grupo" element={<PermissoesGrupoPage />} />
+              <Route path="/configuracoes/permissoes-utilizador" element={<PermissoesUtilizadorPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
