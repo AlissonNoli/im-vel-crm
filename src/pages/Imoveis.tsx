@@ -57,7 +57,7 @@ export default function Imoveis() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.map((imovel) => (
-            <Card key={imovel.id} className="hover:shadow-md transition-shadow cursor-pointer">
+            <Card key={imovel.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/imoveis/${imovel.id}`)}>
               <div className="h-40 bg-secondary rounded-t-lg flex items-center justify-center">
                 <MapPin className="h-8 w-8 text-muted-foreground" />
               </div>

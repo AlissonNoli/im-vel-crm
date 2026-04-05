@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,6 +18,7 @@ const fetcher = (params: QueryParams): Promise<PaginatedResponse<Client>> => {
 };
 
 export default function Clientes() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const { data, count, page, setPage, totalPages, loading, error, params, updateParams, refetch } = usePaginated<Client>({ fetcher });
 
@@ -63,7 +65,7 @@ export default function Clientes() {
               </TableHeader>
               <TableBody>
                 {data.map((c) => (
-                  <TableRow key={c.id} className="cursor-pointer hover:bg-secondary/50">
+                  <TableRow key={c.id} className="cursor-pointer hover:bg-secondary/50" onClick={() => navigate(`/clientes/${c.id}`)}>
                     <TableCell className="font-medium">{c.nome}</TableCell>
                     <TableCell>{c.email}</TableCell>
                     <TableCell>{c.telefone}</TableCell>

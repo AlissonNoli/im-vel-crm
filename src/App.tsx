@@ -11,6 +11,8 @@ import ProspectoDetalhe from "@/pages/ProspectoDetalhe";
 import LeadNovo from "@/pages/LeadNovo";
 import Imoveis from "@/pages/Imoveis";
 import Clientes from "@/pages/Clientes";
+import ClienteDetalhe from "@/pages/ClienteDetalhe";
+import ImovelDetalhe from "@/pages/ImovelDetalhe";
 import Agendamentos from "@/pages/Agendamentos";
 import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
@@ -38,7 +40,9 @@ const App = () => (
               <Route path="/prospectos/:id" element={<ProspectoDetalhe />} />
               <Route path="/leads/new" element={<LeadNovo />} />
               <Route path="/imoveis" element={<Imoveis />} />
+              <Route path="/imoveis/:id" element={<ImovelDetalhe />} />
               <Route path="/clientes" element={<Clientes />} />
+              <Route path="/clientes/:id" element={<ClienteDetalhe />} />
               <Route path="/proprietarios" element={<Clientes />} />
               <Route path="/compradores" element={<Clientes />} />
               <Route path="/agendamentos" element={<Agendamentos />} />
