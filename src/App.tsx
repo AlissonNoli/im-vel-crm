@@ -14,6 +14,7 @@ import Clientes from "@/pages/Clientes";
 import ClienteDetalhe from "@/pages/ClienteDetalhe";
 import ImovelDetalhe from "@/pages/ImovelDetalhe";
 import Agendamentos from "@/pages/Agendamentos";
+import AgendamentoNovo from "@/pages/AgendamentoNovo";
 import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
 import PerfilPage from "@/pages/configuracoes/PerfilPage";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/proprietarios" element={<Clientes />} />
               <Route path="/compradores" element={<Clientes />} />
               <Route path="/agendamentos" element={<Agendamentos />} />
+              <Route path="/agendamentos/novo" element={<AgendamentoNovo />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/configuracoes" element={<Configuracoes />} />
               <Route path="/configuracoes/perfil" element={<PerfilPage />} />
