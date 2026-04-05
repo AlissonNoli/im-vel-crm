@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDays, Clock, MapPin, User, AlertTriangle } from "lucide-react";
+import { CalendarDays, AlertTriangle } from "lucide-react";
 
 const agendamentos = [
   { id: "1", lead: "Carla Mendes", imovel: "Moradia V4 Sintra", agente: "João Ferreira", tipo: "Visita", data: "2024-03-23", hora: "10:00", status: "confirmado" },
@@ -46,6 +46,7 @@ function MiniCalendar() {
 }
 
 export default function Agendamentos() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -53,7 +54,7 @@ export default function Agendamentos() {
           <h1 className="text-2xl font-bold">Agendamentos</h1>
           <p className="text-muted-foreground">Visitas e reuniões agendadas</p>
         </div>
-        <Button>+ Agendar Visita</Button>
+        <Button onClick={() => navigate("/agendamentos/novo")}>+ Novo Agendamento</Button>
       </div>
 
       <Card>
