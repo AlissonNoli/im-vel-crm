@@ -8,11 +8,46 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Save, User, Mail, Phone, FileText, MapPin, Pencil, X } from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Phone, FileText, MapPin, Pencil, X, Building2, Euro } from "lucide-react";
 import { USE_MOCKS, mockClients } from "@/data/mocks";
 import { clientsApi } from "@/api/clients";
 import type { Client, ClientCreate } from "@/types/api";
 import { toast } from "sonner";
+
+interface ClienteImovel {
+  id: string;
+  referencia: string;
+  titulo: string;
+  tipo: string;
+  localizacao: string;
+  valor: number;
+  status: "disponivel" | "reservado" | "vendido" | "em_avaliacao";
+}
+
+const mockImoveisByClient: Record<number, ClienteImovel[]> = {
+  1: [
+    { id: "101", referencia: "IMV-001", titulo: "Apartamento T3 Cascais", tipo: "Apartamento", localizacao: "Cascais, Lisboa", valor: 450000, status: "disponivel" },
+    { id: "102", referencia: "IMV-002", titulo: "Moradia T4 Sintra", tipo: "Moradia", localizacao: "Sintra, Lisboa", valor: 680000, status: "reservado" },
+  ],
+  2: [
+    { id: "103", referencia: "IMV-003", titulo: "Loja Centro Porto", tipo: "Comercial", localizacao: "Porto", valor: 320000, status: "disponivel" },
+  ],
+  3: [
+    { id: "104", referencia: "IMV-004", titulo: "Apartamento T2 Alfama", tipo: "Apartamento", localizacao: "Alfama, Lisboa", valor: 390000, status: "vendido" },
+    { id: "105", referencia: "IMV-005", titulo: "Terreno Ericeira", tipo: "Terreno", localizacao: "Ericeira, Mafra", valor: 150000, status: "disponivel" },
+  ],
+  4: [],
+  5: [
+    { id: "108", referencia: "IMV-008", titulo: "Apartamento T2 Faro", tipo: "Apartamento", localizacao: "Faro, Algarve", valor: 260000, status: "disponivel" },
+  ],
+};
+
+const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+  disponivel: { label: "Disponível", variant: "default" },
+  reservado: { label: "Reservado", variant: "secondary" },
+  vendido: { label: "Vendido", variant: "outline" },
+  em_avaliacao: { label: "Em avaliação", variant: "secondary" },
+};
 
 export default function ClienteDetalhe() {
   const { id } = useParams<{ id: string }>();
