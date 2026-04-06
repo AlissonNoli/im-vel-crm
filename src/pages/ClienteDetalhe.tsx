@@ -293,6 +293,61 @@ export default function ClienteDetalhe() {
           </Card>
         </div>
       </div>
+
+      {/* Imóveis do Proprietário */}
+      {client.tipo === "proprietario" && (() => {
+        const imoveis = mockImoveisByClient[client.id] ?? [];
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                Imóveis do Proprietário
+                <Badge variant="secondary" className="ml-2">{imoveis.length}</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {imoveis.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Nenhum imóvel associado a este proprietário.</p>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {imoveis.map((imv) => {
+                    const st = statusConfig[imv.status];
+                    return (
+                      <Card
+                        key={imv.id}
+                        className="cursor-pointer hover:shadow-md transition-shadow border border-border"
+                        onClick={() => navigate(`/imoveis/${imv.id}`)}
+                      >
+                        <CardContent className="p-4 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Building2 className="h-4 w-4 text-primary shrink-0" />
+                              <span className="font-medium text-sm">{imv.titulo}</span>
+                            </div>
+                            <Badge variant={st.variant} className="text-xs shrink-0">{st.label}</Badge>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <MapPin className="h-3 w-3" />
+                            {imv.localizacao}
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">{imv.referencia} · {imv.tipo}</span>
+                            <span className="font-semibold flex items-center gap-0.5">
+                              <Euro className="h-3 w-3" />
+                              {imv.valor.toLocaleString("pt-PT")}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }
