@@ -8,11 +8,46 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Save, User, Mail, Phone, FileText, MapPin, Pencil, X } from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Phone, FileText, MapPin, Pencil, X, Building2, Euro } from "lucide-react";
 import { USE_MOCKS, mockClients } from "@/data/mocks";
 import { clientsApi } from "@/api/clients";
 import type { Client, ClientCreate } from "@/types/api";
 import { toast } from "sonner";
+
+interface ClienteImovel {
+  id: string;
+  referencia: string;
+  titulo: string;
+  tipo: string;
+  localizacao: string;
+  valor: number;
+  status: "disponivel" | "reservado" | "vendido" | "em_avaliacao";
+}
+
+const mockImoveisByClient: Record<number, ClienteImovel[]> = {
+  1: [
+    { id: "101", referencia: "IMV-001", titulo: "Apartamento T3 Cascais", tipo: "Apartamento", localizacao: "Cascais, Lisboa", valor: 450000, status: "disponivel" },
+    { id: "102", referencia: "IMV-002", titulo: "Moradia T4 Sintra", tipo: "Moradia", localizacao: "Sintra, Lisboa", valor: 680000, status: "reservado" },
+  ],
+  2: [
+    { id: "103", referencia: "IMV-003", titulo: "Loja Centro Porto", tipo: "Comercial", localizacao: "Porto", valor: 320000, status: "disponivel" },
+  ],
+  3: [
+    { id: "104", referencia: "IMV-004", titulo: "Apartamento T2 Alfama", tipo: "Apartamento", localizacao: "Alfama, Lisboa", valor: 390000, status: "vendido" },
+    { id: "105", referencia: "IMV-005", titulo: "Terreno Ericeira", tipo: "Terreno", localizacao: "Ericeira, Mafra", valor: 150000, status: "disponivel" },
+  ],
+  4: [],
+  5: [
+    { id: "108", referencia: "IMV-008", titulo: "Apartamento T2 Faro", tipo: "Apartamento", localizacao: "Faro, Algarve", valor: 260000, status: "disponivel" },
+  ],
+};
+
+const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+  disponivel: { label: "Disponível", variant: "default" },
+  reservado: { label: "Reservado", variant: "secondary" },
+  vendido: { label: "Vendido", variant: "outline" },
+  em_avaliacao: { label: "Em avaliação", variant: "secondary" },
+};
 
 export default function ClienteDetalhe() {
   const { id } = useParams<{ id: string }>();
@@ -258,6 +293,61 @@ export default function ClienteDetalhe() {
           </Card>
         </div>
       </div>
+
+      {/* Imóveis do Proprietário */}
+      {client.tipo === "proprietario" && (() => {
+        const imoveis = mockImoveisByClient[client.id] ?? [];
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                Imóveis do Proprietário
+                <Badge variant="secondary" className="ml-2">{imoveis.length}</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {imoveis.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Nenhum imóvel associado a este proprietário.</p>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {imoveis.map((imv) => {
+                    const st = statusConfig[imv.status];
+                    return (
+                      <Card
+                        key={imv.id}
+                        className="cursor-pointer hover:shadow-md transition-shadow border border-border"
+                        onClick={() => navigate(`/imoveis/${imv.id}`)}
+                      >
+                        <CardContent className="p-4 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Building2 className="h-4 w-4 text-primary shrink-0" />
+                              <span className="font-medium text-sm">{imv.titulo}</span>
+                            </div>
+                            <Badge variant={st.variant} className="text-xs shrink-0">{st.label}</Badge>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <MapPin className="h-3 w-3" />
+                            {imv.localizacao}
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">{imv.referencia} · {imv.tipo}</span>
+                            <span className="font-semibold flex items-center gap-0.5">
+                              <Euro className="h-3 w-3" />
+                              {imv.valor.toLocaleString("pt-PT")}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }
