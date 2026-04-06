@@ -11,6 +11,8 @@ import ProspectoDetalhe from "@/pages/ProspectoDetalhe";
 import LeadNovo from "@/pages/LeadNovo";
 import Imoveis from "@/pages/Imoveis";
 import Clientes from "@/pages/Clientes";
+import Compradores from "@/pages/Compradores";
+import Proprietarios from "@/pages/Proprietarios";
 import ClienteDetalhe from "@/pages/ClienteDetalhe";
 import ImovelDetalhe from "@/pages/ImovelDetalhe";
 import Agendamentos from "@/pages/Agendamentos";
@@ -44,8 +46,8 @@ const App = () => (
               <Route path="/imoveis/:id" element={<ImovelDetalhe />} />
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/:id" element={<ClienteDetalhe />} />
-              <Route path="/proprietarios" element={<Clientes />} />
-              <Route path="/compradores" element={<Clientes />} />
+              <Route path="/proprietarios" element={<Proprietarios />} />
+              <Route path="/compradores" element={<Compradores />} />
               <Route path="/agendamentos" element={<Agendamentos />} />
               <Route path="/agendamentos/novo" element={<AgendamentoNovo />} />
               <Route path="/relatorios" element={<Relatorios />} />
