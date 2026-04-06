@@ -11,6 +11,8 @@ import ProspectoDetalhe from "@/pages/ProspectoDetalhe";
 import LeadNovo from "@/pages/LeadNovo";
 import Imoveis from "@/pages/Imoveis";
 import Clientes from "@/pages/Clientes";
+import Compradores from "@/pages/Compradores";
+import Proprietarios from "@/pages/Proprietarios";
 import ClienteDetalhe from "@/pages/ClienteDetalhe";
 import ImovelDetalhe from "@/pages/ImovelDetalhe";
 import Agendamentos from "@/pages/Agendamentos";
