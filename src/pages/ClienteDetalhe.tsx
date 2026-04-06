@@ -166,189 +166,277 @@ export default function ClienteDetalhe() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Info principal */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Informações Pessoais</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2"><User className="h-4 w-4" /> Nome</Label>
-                  {editing ? (
-                    <Input value={form.nome ?? ""} onChange={(e) => updateField("nome", e.target.value)} />
-                  ) : (
-                    <p className="text-sm font-medium">{client.nome}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2"><Mail className="h-4 w-4" /> E-mail</Label>
-                  {editing ? (
-                    <Input type="email" value={form.email ?? ""} onChange={(e) => updateField("email", e.target.value)} />
-                  ) : (
-                    <p className="text-sm font-medium">{client.email}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2"><Phone className="h-4 w-4" /> Telefone</Label>
-                  {editing ? (
-                    <Input value={form.telefone ?? ""} onChange={(e) => updateField("telefone", e.target.value)} />
-                  ) : (
-                    <p className="text-sm font-medium">{client.telefone}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2"><FileText className="h-4 w-4" /> Documento</Label>
-                  {editing ? (
-                    <Input value={form.documento ?? ""} onChange={(e) => updateField("documento", e.target.value)} />
-                  ) : (
-                    <p className="text-sm font-medium">{client.documento}</p>
-                  )}
-                </div>
-              </div>
+      <Tabs defaultValue="geral">
+        <TabsList>
+          <TabsTrigger value="geral">Informação Geral</TabsTrigger>
+          {client.tipo === "proprietario" && <TabsTrigger value="imoveis">Imóveis</TabsTrigger>}
+          <TabsTrigger value="conversas">Conversações</TabsTrigger>
+        </TabsList>
 
-              <Separator />
+        {/* Tab: Informação Geral */}
+        <TabsContent value="geral" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Informações Pessoais</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><User className="h-4 w-4" /> Nome</Label>
+                      {editing ? (
+                        <Input value={form.nome ?? ""} onChange={(e) => updateField("nome", e.target.value)} />
+                      ) : (
+                        <p className="text-sm font-medium">{client.nome}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><Mail className="h-4 w-4" /> E-mail</Label>
+                      {editing ? (
+                        <Input type="email" value={form.email ?? ""} onChange={(e) => updateField("email", e.target.value)} />
+                      ) : (
+                        <p className="text-sm font-medium">{client.email}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><Phone className="h-4 w-4" /> Telefone</Label>
+                      {editing ? (
+                        <Input value={form.telefone ?? ""} onChange={(e) => updateField("telefone", e.target.value)} />
+                      ) : (
+                        <p className="text-sm font-medium">{client.telefone}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><FileText className="h-4 w-4" /> Documento</Label>
+                      {editing ? (
+                        <Input value={form.documento ?? ""} onChange={(e) => updateField("documento", e.target.value)} />
+                      ) : (
+                        <p className="text-sm font-medium">{client.documento}</p>
+                      )}
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Tipo</Label>
-                  {editing ? (
-                    <Select value={form.tipo} onValueChange={(v) => updateField("tipo", v)}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="comprador">Comprador</SelectItem>
-                        <SelectItem value="proprietario">Proprietário</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <p className="text-sm font-medium">{client.tipo === "comprador" ? "Comprador" : "Proprietário"}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Endereço</Label>
-                  {editing ? (
-                    <Input value={form.endereco ?? ""} onChange={(e) => updateField("endereco", e.target.value)} />
-                  ) : (
-                    <p className="text-sm font-medium">{client.endereco || "—"}</p>
-                  )}
-                </div>
-              </div>
+                  <Separator />
 
-              <div className="space-y-2">
-                <Label>Observações</Label>
-                {editing ? (
-                  <Textarea rows={4} value={form.notas ?? ""} onChange={(e) => updateField("notas", e.target.value)} />
-                ) : (
-                  <p className="text-sm text-muted-foreground">{client.notas || "Sem observações."}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Tipo</Label>
+                      {editing ? (
+                        <Select value={form.tipo} onValueChange={(v) => updateField("tipo", v)}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="comprador">Comprador</SelectItem>
+                            <SelectItem value="proprietario">Proprietário</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <p className="text-sm font-medium">{client.tipo === "comprador" ? "Comprador" : "Proprietário"}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Endereço</Label>
+                      {editing ? (
+                        <Input value={form.endereco ?? ""} onChange={(e) => updateField("endereco", e.target.value)} />
+                      ) : (
+                        <p className="text-sm font-medium">{client.endereco || "—"}</p>
+                      )}
+                    </div>
+                  </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Resumo</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">ID</span>
-                <span className="font-medium">#{client.id}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Tipo</span>
-                <Badge variant={client.tipo === "comprador" ? "default" : "secondary"}>
-                  {client.tipo === "comprador" ? "Comprador" : "Proprietário"}
-                </Badge>
-              </div>
-              <Separator />
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Criado em</span>
-                <span className="font-medium">{new Date(client.created_at).toLocaleDateString("pt-PT")}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Atualizado em</span>
-                <span className="font-medium">{new Date(client.updated_at).toLocaleDateString("pt-PT")}</span>
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="space-y-2">
+                    <Label>Observações</Label>
+                    {editing ? (
+                      <Textarea rows={4} value={form.notas ?? ""} onChange={(e) => updateField("notas", e.target.value)} />
+                    ) : (
+                      <p className="text-sm text-muted-foreground">{client.notas || "Sem observações."}</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Ações Rápidas</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start" onClick={() => window.open(`mailto:${client.email}`)}>
-                <Mail className="h-4 w-4 mr-2" /> Enviar E-mail
-              </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => window.open(`tel:${client.telefone}`)}>
-                <Phone className="h-4 w-4 mr-2" /> Ligar
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            {/* Sidebar */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Resumo</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">ID</span>
+                    <span className="font-medium">#{client.id}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Tipo</span>
+                    <Badge variant={client.tipo === "comprador" ? "default" : "secondary"}>
+                      {client.tipo === "comprador" ? "Comprador" : "Proprietário"}
+                    </Badge>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Criado em</span>
+                    <span className="font-medium">{new Date(client.created_at).toLocaleDateString("pt-PT")}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Atualizado em</span>
+                    <span className="font-medium">{new Date(client.updated_at).toLocaleDateString("pt-PT")}</span>
+                  </div>
+                </CardContent>
+              </Card>
 
-      {/* Imóveis do Proprietário */}
-      {client.tipo === "proprietario" && (() => {
-        const imoveis = mockImoveisByClient[client.id] ?? [];
-        return (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Ações Rápidas</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Button variant="outline" className="w-full justify-start" onClick={() => window.open(`mailto:${client.email}`)}>
+                    <Mail className="h-4 w-4 mr-2" /> Enviar E-mail
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start" onClick={() => window.open(`tel:${client.telefone}`)}>
+                    <Phone className="h-4 w-4 mr-2" /> Ligar
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start" onClick={() => window.open(`https://wa.me/${client.telefone.replace(/\D/g, "")}`)}>
+                    <MessageSquare className="h-4 w-4 mr-2" /> WhatsApp
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Tab: Imóveis (só para proprietários) */}
+        {client.tipo === "proprietario" && (
+          <TabsContent value="imoveis" className="mt-6">
+            {(() => {
+              const imoveis = mockImoveisByClient[client.id] ?? [];
+              return (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Building2 className="h-5 w-5" />
+                      Imóveis do Proprietário
+                      <Badge variant="secondary" className="ml-2">{imoveis.length}</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {imoveis.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">Nenhum imóvel associado a este proprietário.</p>
+                    ) : (
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {imoveis.map((imv) => {
+                          const st = statusConfig[imv.status];
+                          return (
+                            <Card
+                              key={imv.id}
+                              className="cursor-pointer hover:shadow-md transition-shadow border border-border"
+                              onClick={() => navigate(`/imoveis/${imv.id}`)}
+                            >
+                              <CardContent className="p-4 space-y-2">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <Building2 className="h-4 w-4 text-primary shrink-0" />
+                                    <span className="font-medium text-sm">{imv.titulo}</span>
+                                  </div>
+                                  <Badge variant={st.variant} className="text-xs shrink-0">{st.label}</Badge>
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <MapPin className="h-3 w-3" />
+                                  {imv.localizacao}
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-muted-foreground">{imv.referencia} · {imv.tipo}</span>
+                                  <span className="font-semibold flex items-center gap-0.5">
+                                    <Euro className="h-3 w-3" />
+                                    {imv.valor.toLocaleString("pt-PT")}
+                                  </span>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })()}
+          </TabsContent>
+        )}
+
+        {/* Tab: Conversações */}
+        <TabsContent value="conversas" className="mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                Imóveis do Proprietário
-                <Badge variant="secondary" className="ml-2">{imoveis.length}</Badge>
+                <MessageSquare className="h-5 w-5" />
+                Conversações
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {imoveis.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Nenhum imóvel associado a este proprietário.</p>
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {imoveis.map((imv) => {
-                    const st = statusConfig[imv.status];
-                    return (
-                      <Card
-                        key={imv.id}
-                        className="cursor-pointer hover:shadow-md transition-shadow border border-border"
-                        onClick={() => navigate(`/imoveis/${imv.id}`)}
-                      >
-                        <CardContent className="p-4 space-y-2">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-2">
-                              <Building2 className="h-4 w-4 text-primary shrink-0" />
-                              <span className="font-medium text-sm">{imv.titulo}</span>
-                            </div>
-                            <Badge variant={st.variant} className="text-xs shrink-0">{st.label}</Badge>
-                          </div>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            {imv.localizacao}
-                          </div>
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-muted-foreground">{imv.referencia} · {imv.tipo}</span>
-                            <span className="font-semibold flex items-center gap-0.5">
-                              <Euro className="h-3 w-3" />
-                              {imv.valor.toLocaleString("pt-PT")}
-                            </span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+            <CardContent className="space-y-4">
+              {/* Mock conversations */}
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <Phone className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">Chamada telefónica</span>
+                      <span className="text-xs text-muted-foreground">há 2 dias</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Cliente contactado para acompanhamento. Mostrou interesse em agendar visita.
+                    </p>
+                  </div>
                 </div>
-              )}
+                <Separator />
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <Mail className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">E-mail enviado</span>
+                      <span className="text-xs text-muted-foreground">há 5 dias</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Enviada proposta com detalhes dos imóveis disponíveis.
+                    </p>
+                  </div>
+                </div>
+                <Separator />
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <MessageSquare className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">WhatsApp</span>
+                      <span className="text-xs text-muted-foreground">há 1 semana</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Primeiro contacto realizado via WhatsApp. Cliente respondeu com interesse.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* New message input */}
+              <div className="flex gap-2">
+                <Textarea placeholder="Escrever nova nota de conversação..." className="flex-1" rows={2} />
+                <Button size="icon" className="self-end">
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        );
-      })()}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
