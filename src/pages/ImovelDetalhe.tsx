@@ -125,9 +125,14 @@ export default function ImovelDetalhe() {
               </Button>
             </>
           ) : (
-            <Button onClick={startEditing}>
-              <Pencil className="h-4 w-4 mr-2" /> Editar
-            </Button>
+            <>
+              <Button variant="outline" onClick={startEditing}>
+                <Pencil className="h-4 w-4 mr-2" /> Edição rápida
+              </Button>
+              <Button onClick={() => navigate(`/imoveis/${property.id}/editar`)}>
+                <Pencil className="h-4 w-4 mr-2" /> Editar completo
+              </Button>
+            </>
           )}
         </div>
       </div>
