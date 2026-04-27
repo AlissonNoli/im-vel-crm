@@ -37,7 +37,7 @@ export default function Imoveis() {
           <h1 className="text-2xl font-bold">Imóveis</h1>
           <p className="text-muted-foreground">Gestão de propriedades</p>
         </div>
-        <Button>+ Adicionar Imóvel</Button>
+        <Button onClick={() => navigate("/imoveis/novo")}>+ Adicionar Imóvel</Button>
       </div>
 
       <FilterBar
