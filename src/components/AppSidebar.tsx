@@ -60,10 +60,7 @@ const imoveisSubItems = [
   { title: "Em avaliação", url: "/imoveis?status=em_avaliacao", icon: FileText },
 ];
 
-const clientesSubItems = [
-  { title: "Compradores", url: "/compradores", icon: ShoppingCart },
-  { title: "Proprietários", url: "/proprietarios", icon: Home },
-];
+// Compradores e Proprietários são entradas de topo no menu (sem agrupamento)
 
 const configSubItems = [
   { title: "Perfil", url: "/configuracoes/perfil", icon: User },
@@ -135,20 +132,17 @@ export function AppSidebar() {
 
   const isProspectosActive = location.pathname.startsWith("/prospectos") || location.pathname === "/leads/new";
   const isImoveisActive = location.pathname.startsWith("/imoveis");
-  const isClientesActive = location.pathname.startsWith("/compradores") || location.pathname.startsWith("/proprietarios") || location.pathname.startsWith("/clientes");
   const isConfigActive = location.pathname.startsWith("/configuracoes");
 
   const [prospectosOpen, setProspectosOpen] = useState(isProspectosActive);
   const [imoveisOpen, setImoveisOpen] = useState(isImoveisActive);
-  const [clientesOpen, setClientesOpen] = useState(isClientesActive);
   const [configOpen, setConfigOpen] = useState(isConfigActive);
 
   useEffect(() => {
     if (isProspectosActive) setProspectosOpen(true);
     if (isImoveisActive) setImoveisOpen(true);
-    if (isClientesActive) setClientesOpen(true);
     if (isConfigActive) setConfigOpen(true);
-  }, [isProspectosActive, isImoveisActive, isClientesActive, isConfigActive]);
+  }, [isProspectosActive, isImoveisActive, isConfigActive]);
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
@@ -201,16 +195,25 @@ export function AppSidebar() {
                 collapsed={collapsed}
               />
 
-              {/* Clientes */}
-              <CollapsibleMenu
-                label="Clientes"
-                icon={UserCheck}
-                subItems={clientesSubItems}
-                isActive={isClientesActive}
-                open={clientesOpen}
-                onOpenChange={setClientesOpen}
-                collapsed={collapsed}
-              />
+              {/* Compradores */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/compradores" className="hover:bg-sidebar-accent" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    {!collapsed && <span>Compradores</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Proprietários */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/proprietarios" className="hover:bg-sidebar-accent" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
+                    <Home className="mr-2 h-4 w-4" />
+                    {!collapsed && <span>Proprietários</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
               {/* Agendamentos */}
               <SidebarMenuItem>
