@@ -88,13 +88,15 @@ export default function ClienteDetalhe() {
   if (!client) {
     return (
       <div className="space-y-4">
-        <Button variant="ghost" onClick={() => navigate("/clientes")}>
+        <Button variant="ghost" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
         </Button>
         <p className="text-muted-foreground">Cliente não encontrado.</p>
       </div>
     );
   }
+
+  const backTo = client.tipo === "proprietario" ? "/proprietarios" : "/compradores";
 
   const startEditing = () => {
     setForm({
@@ -133,7 +135,7 @@ export default function ClienteDetalhe() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/clientes")}>
+          <Button variant="ghost" size="icon" onClick={() => navigate(backTo)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
