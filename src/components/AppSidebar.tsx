@@ -61,7 +61,6 @@ const imoveisSubItems = [
 ];
 
 const clientesSubItems = [
-  { title: "Todos", url: "/clientes", icon: UserCheck },
   { title: "Compradores", url: "/compradores", icon: ShoppingCart },
   { title: "Proprietários", url: "/proprietarios", icon: Home },
 ];
@@ -136,7 +135,7 @@ export function AppSidebar() {
 
   const isProspectosActive = location.pathname.startsWith("/prospectos") || location.pathname === "/leads/new";
   const isImoveisActive = location.pathname.startsWith("/imoveis");
-  const isClientesActive = location.pathname.startsWith("/clientes") || location.pathname.startsWith("/compradores") || location.pathname.startsWith("/proprietarios");
+  const isClientesActive = location.pathname.startsWith("/compradores") || location.pathname.startsWith("/proprietarios") || location.pathname.startsWith("/clientes");
   const isConfigActive = location.pathname.startsWith("/configuracoes");
 
   const [prospectosOpen, setProspectosOpen] = useState(isProspectosActive);
